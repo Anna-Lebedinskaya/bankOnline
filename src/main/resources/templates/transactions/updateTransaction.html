@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Изменить информацию о транзакции</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3 class="mt-3 mb-3"
+        th:text="'Обновить информацию о переводе со счета ' + ${transaction.getBankAccountFromInfo().getAccountNumber()} + ' на счет ' + ${transaction.getBankAccountToInfo().getAccountNumber()}"></h3>
+    <form enctype="multipart/form-data" class="needs-validation" novalidate style="max-width: 50vw" method="POST"
+        th:action="@{/transactions/update}">
+    <input type="hidden" name="id"
+           th:value="${transaction.getId()}">
+            <div class="mb-3">
+                <label for="bankAccountFromId" class="form-label">Клиент</label>
+                <select class="form-select" name="bankAccountFromId" id="bankAccountFromId">
+                    <option value="">Выберите счет отправителя</option>
+                    <th:block th:each="bankAccount : ${bankAccounts}">
+                        <option th:value="${bankAccount.getId()}"
+                                th:text="${bankAccount.getAccountNumber()}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div class="form-floating">
+                <div class="mb-3">
+                    <label for="bankAccountToId" class="form-label">Банк</label>
+                    <select class="form-select" name="bankAccountToId" id="bankAccountToId">
+                      <option value="">Выберите счет отправителя</option>
+                      <th:block th:each="bankAccount : ${bankAccounts}">
+                        <option th:value="${bankAccount.getId()}"
+                                th:text="${bankAccount.getAccountNumber()}"></option>
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+<!--    <div class="mt-3 row g-2">-->
+<!--      <div class="col-md">-->
+<!--        <div class="form-floating">-->
+<!--          &lt;!&ndash;Название поля инпута должно строго соответствовать названию поля класса (DTO)&ndash;&gt;-->
+<!--          <input name="amount" th:value="${bankAccount.getAccountNumber()}" type="amount"-->
+<!--                 class="form-control" id="amount" placeholder="Сумма" required>-->
+<!--          <label for="amount">Сумма</label>-->
+<!--          <div class="invalid-feedback">Обязательное поле для заполнения</div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="mt-3 row g-2">-->
+<!--      <div class="col-md">-->
+<!--        <div class="form-floating">-->
+<!--          &lt;!&ndash;Название поля инпута должно строго соответствовать названию поля класса (DTO)&ndash;&gt;-->
+<!--          <input name="balance" th:value="${bankAccount.getBalance()}" type="number"-->
+<!--                 class="form-control" id="balance" placeholder="Баланс" required>-->
+<!--          <label for="balance">Баланс</label>-->
+<!--          <div class="invalid-feedback">Обязательное поле для заполнения</div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="mt-3 row g-2">-->
+<!--      <div class="col-md">-->
+<!--        <div class="form-floating">-->
+<!--          &lt;!&ndash;Название поля инпута должно строго соответствовать названию поля класса (DTO)&ndash;&gt;-->
+<!--          <input name="openingDate" th:value="${bankAccount.getOpeningDate()}" type="date"-->
+<!--                 class="form-control" id="openingDate" placeholder="Дата открытия" required>-->
+<!--          <label for="openingDate">Дата открытия</label>-->
+<!--          <div class="invalid-feedback">Обязательное поле для заполнения</div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="mt-3 row g-2">-->
+<!--      <div class="col-md">-->
+<!--        <div class="form-floating">-->
+<!--          &lt;!&ndash;Название поля инпута должно строго соответствовать названию поля класса (DTO)&ndash;&gt;-->
+<!--          <input name="endingDate" th:value="${bankAccount.getEndingDate()} != null ? ${bankAccount.getEndingDate()} : ''" type="date"-->
+<!--                 class="form-control" id="endingDate" placeholder="Дата окончания">-->
+<!--          <label for="endingDate">Дата окончания</label>-->
+<!--          &lt;!&ndash;                    <div class="invalid-feedback">Обязательное поле для заполнения</div>&ndash;&gt;-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="mt-3 row g-2">
+      <button type="submit" class="btn btn-primary" onclick="validateForm()">Обновить</button>
+      <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!--Бронь маршрута-->
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиенты</title>
+    <script th:inline="javascript">
+        let flag = [[${exception}]];
+        window.onload = () => {
+            if (flag) new bootstrap.Modal(document.getElementById('deleteErrorModal'), {keyboard: false}).show()
+        };
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div>
+        <hr class="hr"/>
+        <h3>Поиск клиента</h3>
+        <form method="POST" th:action="@{/users/search}" th:object="${userSearchForm}">
+            <div class="mt-0 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="firstName" type="text" class="form-control" id="firstName" placeholder="Имя">
+                        <label for="firstName">Имя клиента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="lastName" type="text" class="form-control" id="lastName" placeholder="Фамилия">
+                        <label for="lastName">Фамилия клиента</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="login" type="text" class="form-control" id="login" placeholder="Логин">
+                        <label for="login">Логин клиента</label>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <button type="submit" class="btn btn-secondary">Найти клиента</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <hr class="mt-3 hr"/>
+    <div class="mt-5">
+        <div class="row">
+            <div class="col">
+                <h2>Все клиенты системы</h2>
+            </div>
+            <div class="col">
+                <a sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))"
+                   th:href="@{/users/add-user}"
+                   class="btn btn-success"
+                   role="button"
+                   style="float: right"
+                   aria-disabled="true">Добавить клиента</a>
+            </div>
+        </div>
+        <div>
+            <table class="table table-hover mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">Логин</th>
+                    <th scope="col">ФИО</th>
+                    <th scope="col">Почта</th>
+                    <th scope="col">Дата рождения</th>
+                    <th scope="col">Телефон</th>
+                    <th scope="col">Адрес</th>
+                    <th scope="col">Роль</th>
+                    <th scope="col">Заблокирован</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td>
+                        <a class="text-link text-blue" th:href="'/users/profile/' + ${user.getId()}"
+                           th:text="${user.getLogin()}"></a>
+                    </td>
+                    <td th:text="${user.getLastName()} + ' ' + ${user.getFirstName()} + ' ' + ${user.getMiddleName()}"></td>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:text="${user.getBirthDate()}"></td>
+                    <td th:text="${user.getPhone()}"></td>
+                    <td th:text="${user.getAddress()}"></td>
+                    <td th:text="${user.getRole().getId() == 1} ? 'Клиент' : 'Менеджер'"></td>
+                    <td th:text="${user.isDeleted()} ? 'Да' : 'Нет'"></td>
+                    <td>
+                        <div sec:authorize="isAuthenticated() && (hasRole('ADMIN'))">
+                            <a th:if="${!user.isDeleted()}" class="btn btn-sm btn-outline-success"
+                               th:href="'/users/changeRole/' + ${user.getId()}"
+                               onclick="return confirm('Вы действительно хотите сменить роль пользователя?');">Роль</a>
+                            <a th:if="${!user.isDeleted()}" class="btn btn-sm btn-outline-success"
+                               th:href="'/users/profile/update/' + ${user.getId()}">Обновить</a>
+                            <a th:if="${!user.isDeleted()}" class="btn btn-sm btn-outline-danger"
+                               th:href="'/users/delete/' + ${user.getId()}"
+                               onclick="return confirm('Вы действительно хотите удалить пользователя?');">Удалить</a>
+                            <a th:if="${user.isDeleted()}" class="btn btn-sm btn-outline-warning"
+                               th:href="'/users/restore/' + ${user.getId()}">Восстановить</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Модальное окно для ошибок старт-->
+    <div th:if="${exception != null && exception != ''}" class="modal fade" id="deleteErrorModal" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ошибка</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" th:text="${exception}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Модальное окно для ошибок конец-->
+    <nav aria-label="Pagination" th:if="${users.totalPages gt 0}">
+        <ul class="pagination justify-content-center font-weight-bold">
+            <li class="page-item" th:classappend="${users.number eq 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/users/list?page={id}(id=${users.number lt 2 ? 1 : users.number})}"
+                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i eq users.number + 1} ? 'active'"
+                th:each="i : ${#numbers.sequence( 1, users.totalPages, 1)}">
+                <a class="page-link" th:href="@{/users/list?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+            </li>
+            <li class="page-item" th:classappend="${users.number eq users.totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/users/list?page={id}(id=${users.number + 1})}"
+                   aria-label="Next" title="Next Page" data-toggle="tooltip">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

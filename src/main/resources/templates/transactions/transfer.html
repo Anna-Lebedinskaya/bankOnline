@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Отправить перевод</title>
+        <script th:inline="javascript">
+            let flag = [[${exception}]];//переменная-флаг в thymeleaf
+            window.onload = () => {
+                if (flag) new bootstrap.Modal(document.getElementById('deleteErrorModal'), {keyboard: false}).show()
+            };
+        </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3 class="mt-3 mb-3"
+        th:text="'Отправить перевод со счета ' + ${bankAccountFrom.getAccountNumber()} + ' клиента ' + ${bankAccountFrom.getUserInfo().getLastName()} + ' ' + ${bankAccountFrom.getUserInfo().getFirstName()} + ' ' + ${bankAccountFrom.getUserInfo().getMiddleName()}"></h3>
+    <form enctype="multipart/form-data" class="needs-validation" novalidate style="max-width: 50vw" method="POST"
+          th:action="@{/transactions/verify}" th:object="${transfer}">
+        <input type="hidden" name="id"
+               th:value="${bankAccountFrom.getId()}">
+            <div class="mt-3 row g-2">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <!--Название поля инпута должно строго соответствовать названию поля класса (DTO)-->
+                        <input name="lastNameTo" th:value="${transfer.getLastNameTo()}" type="text"
+                               class="form-control" id="lastNameTo" placeholder="Фамилия получателя" >
+                        <label for="lastNameTo">Фамилия получателя</label>
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('lastNameTo')}">
+                            <p th:errors="*{lastNameTo}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="firstNameTo" th:value="${transfer.getFirstNameTo()}" type="text"
+                           class="form-control" id="firstNameTo" placeholder="Имя получателя">
+                    <label for="firstNameTo">Имя получателя</label>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="middleNameTo" th:value="${transfer.getMiddleNameTo()}" type="text"
+                           class="form-control" id="middleNameTo" placeholder="Отчество получателя">
+                    <label for="middleNameTo">Отчество получателя</label>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="accountNumberTo" th:value="${transfer.getAccountNumberTo()}" type="text"
+                           class="form-control" id="accountNumberTo" placeholder="Счет получателя">
+                    <label for="accountNumberTo">Счет получателя</label>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('accountNumberTo')}">
+                        <p th:errors="*{accountNumberTo}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="amount" th:value="${transfer.getFirstNameTo()}" type="text"
+                           class="form-control" id="amount" placeholder="Сумма перевода" required>
+                    <label for="amount">Сумма перевода</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('amount')}">
+                        <p th:errors="*{amount}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input name="purpose" th:value="${transfer.getFirstNameTo()}" type="text"
+                           class="form-control" id="purpose" placeholder="Назначение платежа" required>
+                    <label for="purpose">Назначение платежа</label>
+                    <div class="invalid-feedback">Обязательное поле для заполнения</div>
+                </div>
+            </div>
+        </div>
+                <!--Модальное окно для ошибок старт-->
+                <div th:if="${exception != null && exception != ''}" class="modal fade" id="deleteErrorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Ошибка</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" th:text="${exception}">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Модальное окно для ошибок конец-->
+    <div class="mt-3 row g-2">
+        <button type="submit" class="btn btn-primary" onclick="validateForm()">Отправить перевод</button>
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад
+        </button>
+    </div>
+        </form>
+</div>
+</body>
+</html>

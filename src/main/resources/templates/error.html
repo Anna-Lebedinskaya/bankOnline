@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Ошибка</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3 class="mt-3 mb-3">Что-то пошло не так!</h3>
+    <p th:if="${exception != null}" th:text="${exception}"></p>
+    <div class="col">
+        <a href="/"
+           class="btn btn-success"
+           role="button"
+           aria-disabled="true">На главную</a>
+        <a class="btn btn-primary"
+           role="button"
+           onclick="window.history.back()"
+           aria-disabled="true">Назад</a>
+    </div>
+</div>
+</body>
+</html>

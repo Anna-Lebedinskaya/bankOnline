@@ -1,0 +1,105 @@
+<!--Бронь маршрута-->
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Банковские продукты</title>
+  <script th:inline="javascript">
+    let flag = [[${exception}]]; //переменная-флаг Thymeleaf
+    window.onload = () => {
+      if (flag) new bootstrap.Modal(document.getElementById('deleteErrorModal'), {keyboard: false}).show()
+    };
+  </script>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="mt-5">
+    <div class="row">
+      <div class="col">
+        <h2>Все банковские продукты</h2>
+      </div>
+      <div class="col">
+        <a sec:authorize="isAuthenticated() && hasRole('ADMIN')"
+           th:href="@{/types/add}"
+           class="btn btn-success"
+           role="button"
+           style="float: right"
+           aria-disabled="true">Добавить продукт</a>
+      </div>
+    </div>
+    <div>
+      <table class="table table-hover mt-3">
+        <thead>
+        <tr>
+          <th scope="col">Название</th>
+          <th scope="col">Описание</th>
+          <th scope="col">Заблокирован</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="type : ${types}">
+          <td th:text="${type.getTitle()}"></td>
+          <td th:text="${type.getDescription()}"></td>
+          <td th:text="${type.isDeleted()} ? 'Да' : 'Нет'"></td>
+          <td>
+            <div sec:authorize="isAuthenticated() && (hasRole('ADMIN'))">
+              <a class="btn btn-sm btn-outline-success"
+                 th:href="'/types/update/' + ${type.getId}">Обновить</a>
+              <a th:if="${!type.isDeleted()}" class="btn btn-sm btn-outline-danger"
+                 th:href="'/types/delete/' + ${type.getId()}"
+                 onclick="return confirm('Вы действительно хотите удалить продукт?')">Удалить</a>
+              <a th:if="${type.isDeleted()}" class="btn btn-sm btn-outline-warning" th:href="'/types/restore/' + ${type.getId()}">Восстановить</a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Модальное окно для ошибок старт-->
+  <div th:if="${exception != null && exception != ''}" class="modal fade" id="deleteErrorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ошибка</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" th:text="${exception}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Модальное окно для ошибок конец-->
+  <nav aria-label="Pagination" th:if="${types.totalPages gt 0}">
+    <ul class="pagination justify-content-center font-weight-bold">
+      <li class="page-item" th:classappend="${types.number eq 0} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{/types/list?page={id}(id=${types.number lt 2 ? 1 : types.number})}"
+           aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" th:classappend="${i eq types.number + 1} ? 'active'"
+          th:each="i : ${#numbers.sequence( 1, types.totalPages, 1)}">
+        <a class="page-link" th:href="@{/types/list?page={id}(id=${i})}" th:text="${i}"
+           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+      </li>
+      <li class="page-item" th:classappend="${types.number eq types.totalPages - 1} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{/types/list?page={id}(id=${types.number + 1})}"
+           aria-label="Next" title="Next Page" data-toggle="tooltip">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>

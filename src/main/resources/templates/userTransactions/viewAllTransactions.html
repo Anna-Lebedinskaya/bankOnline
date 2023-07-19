@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Транзакции</title>
+    <!--    <script th:inline="javascript">-->
+    <!--        let flag = [[${exception}]];//переменная-флаг в thymeleaf-->
+    <!--        window.onload = () => {-->
+    <!--            if (flag) new bootstrap.Modal(document.getElementById('deleteErrorModal'), {keyboard: false}).show()-->
+    <!--        };-->
+    <!--    </script>-->
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="mt-5">
+        <div class="row">
+            <div class="col">
+                <h2>Все мои транзакции</h2>
+            </div>
+        </div>
+        <div>
+            <table class="table table-hover mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">ФИО отправителя</th>
+                    <th scope="col">Вид счета</th>
+                    <th scope="col">Номер счета</th>
+                    <th scope="col">ФИО получателя</th>
+                    <th scope="col">Вид счета</th>
+                    <th scope="col">Номер счета</th>
+                    <th scope="col">Сумма, руб.</th>
+                    <th scope="col">Назначение платежа</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.getBankAccountFromInfo.getUserInfo().getLastName()} +
+                    ' ' + ${transaction.getBankAccountFromInfo.getUserInfo().getFirstName()} +
+                    ' ' + ${transaction.getBankAccountFromInfo.getUserInfo().getMiddleName()}"></td>
+                    <td th:text="${transaction.getBankAccountFromInfo.getTypeInfo().getTitle()}"></td>
+                    <td th:text="${transaction.getBankAccountFromInfo.getAccountNumber}"></td>
+                    <td th:text="${transaction.getBankAccountToInfo.getUserInfo().getLastName()} +
+                    ' ' + ${transaction.getBankAccountToInfo.getUserInfo().getFirstName()} +
+                    ' ' + ${transaction.getBankAccountToInfo.getUserInfo().getMiddleName()}"></td>
+                    <td th:text="${transaction.getBankAccountToInfo.getTypeInfo().getTitle()}"></td>
+                    <td th:text="${transaction.getBankAccountToInfo.getAccountNumber}"></td>
+                    <td th:text="${transaction.getAmount()}"></td>
+                    <td th:text="${transaction.getPurpose()}"></td>
+                    <td th:text="${transaction.getDate()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--        &lt;!&ndash;Модальное окно для ошибок старт&ndash;&gt;-->
+        <!--        <div th:if="${exception != null && exception != ''}" class="modal fade" id="deleteErrorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+        <!--            <div class="modal-dialog">-->
+        <!--                <div class="modal-content">-->
+        <!--                    <div class="modal-header">-->
+        <!--                        <h5 class="modal-title" id="exampleModalLabel">Ошибка</h5>-->
+        <!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        <!--                    </div>-->
+        <!--                    <div class="modal-body" th:text="${exception}">-->
+        <!--                    </div>-->
+        <!--                    <div class="modal-footer">-->
+        <!--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        &lt;!&ndash;Модальное окно для ошибок конец&ndash;&gt;-->
+        <div>
+            <nav aria-label="Pagination" th:if="${transactions.totalPages gt 0}">
+                <ul class="pagination justify-content-center font-weight-bold">
+                    <li class="page-item" th:classappend="${transactions.number eq 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/transactions/user-transactions?page={id}(id=${transactions.number lt 2 ? 1 : transactions.number})}"
+                           aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:classappend="${i eq transactions.number + 1} ? 'active'"
+                        th:each="i : ${#numbers.sequence( 1, transactions.totalPages, 1)}">
+                        <a class="page-link" th:href="@{/transactions?page={id}(id=${i})}" th:text="${i}"
+                           th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                    </li>
+                    <li class="page-item"
+                        th:classappend="${transactions.number eq transactions.totalPages - 1} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/transactions?page={id}(id=${transactions.number + 2})}"
+                           aria-label="Next" title="Next Page" data-toggle="tooltip">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

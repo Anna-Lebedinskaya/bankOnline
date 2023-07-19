@@ -1,0 +1,58 @@
+// Use DBML to define your database structure
+// Docs: https://dbdiagram.io/d/645af3aedca9fb07c4cccef6
+
+
+Table users {
+  id number [primary key]
+  login text
+  password text
+  first_name text
+  middle_name text
+  last_name text
+  birth_date date
+  phone text
+  address text
+  role_id number
+}
+
+Table bank_accounts {
+id number [primary key]
+user_id number
+type_id number
+account_number text
+balance number
+opening_date date
+closing_date date
+}
+
+Table type {
+id number [primary key]
+title text
+description text
+is_replenished boolean
+}
+
+Table transactions {
+id number [primary key]
+bank_account_id_from number
+bank_account_id_to number
+date date
+}
+
+Table role {
+  id number [primary key]
+  title text
+  description text
+}
+
+
+
+Ref: users.id < bank_accounts.user_id
+
+Ref: type.id < bank_accounts.type_id
+
+Ref: users.role_id > role.id
+
+Ref: bank_accounts.id < transactions.bank_account_id_from
+
+Ref: bank_accounts.id < transactions.bank_account_id_to

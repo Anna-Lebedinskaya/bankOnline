@@ -1,0 +1,58 @@
+<!--Страница авторизации-->
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="https://www.thymeleaf.org"
+      layout:decorate="~{layout}"
+      lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Вход в Онлайн Банк></title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid mt-5">
+    <form method="POST" th:action="@{/login}">
+        <div class="mb-3">
+<!--            <div class="mb-3 d-flex justify-content-center align-items-center">-->
+<!--                <img src="/img/logo_login.svg" alt="" width="108" height="86">-->
+<!--            </div>-->
+            <h1 class="h3 form-floating col-md-4 offset-md-4 m-auto">Вход в Онлайн Банк</h1>
+        </div>
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                <p style="float: none">Неверный логин/пароль</p>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-floating col-md-4 offset-md-4 m-auto">
+                <input name="username" type="text" class="form-control" id="floatingInput"
+                       placeholder="Имя пользователя">
+                <label for="floatingInput">Введите имя пользователя</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-floating col-md-4 offset-md-4 m-auto">
+                <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Пароль">
+                <label for="floatingPassword">Введите пароль</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <!--            <div class="form-group col-md-4 offset-md-4 m-auto">-->
+            <button type="submit" class="btn btn-info col-md-4 offset-md-4">Войти</button>
+            <!--            </div>-->
+        </div>
+
+        <div class="mb-5">
+            <!--            <div class="col-md-4 offset-md-4">-->
+            <div class="btn-group col-md-4 offset-md-4" role="group" aria-label="Basic example">
+                <a class="btn btn-link" href="/users/registration">Зарегистрироваться</a>
+                <a class="btn btn-link" href="/users/remember-password">Забыли пароль?</a>
+            </div>
+            <!--            </div>-->
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="header">
+  <nav class="navbar navbar-expand-lg" style="background-color: #0a4275">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/" style="color: whitesmoke">Банковская система онлайн</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" class="nav-link">
+            <a class="nav-link active" aria-current="page" href="/bankAccounts">Банковские счета</a>
+          </li>
+          <li sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" class="nav-link">
+            <a class="nav-link active" aria-current="page" href="/transactions">Транзакции</a>
+          </li>
+          <li sec:authorize="isAuthenticated() && (hasRole('USER'))" class="nav-link">
+            <a class="nav-link active" aria-current="page" th:href="'/bankAccounts/user-accounts/' + ${#authentication.getPrincipal().getUserId()}">Мои банковские счета</a>
+          </li>
+          <li sec:authorize="isAuthenticated() && (hasRole('USER'))" class="nav-link">
+            <a class="nav-link active" aria-current="page" th:href="'/transactions/user-transactions/' + ${#authentication.getPrincipal().getUserId()}">Мои транзакции</a>
+          </li>
+          <li sec:authorize="isAuthenticated() && (hasRole('ADMIN') || hasRole('MANAGER'))" class="nav-link">
+            <a class="nav-link active" aria-current="page" href="/users/list">Клиенты</a>
+          </li>
+          <li sec:authorize="isAuthenticated() && hasRole('ADMIN')" class="nav-link">
+            <a class="nav-link active" aria-current="page" href="/types/list">Банковские продукты</a>
+          </li>
+        </ul>
+        <form class="d-flex" sec:authorize="isAuthenticated()">
+          <span th:text="${#authentication.getPrincipal().getUsername()} + '&nbsp;'"></span>
+        </form>
+        <div sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+          <a class="nav-link active" style="float: right" th:href="'/users/profile/' + ${#authentication.getPrincipal().getUserId()}">Профиль&nbsp;&nbsp;&nbsp;</a>
+        </div>
+        <form class="d-flex" sec:authorize="!isAuthenticated()">
+          <a href="/login" class="btn btn-primary" role="button" aria-disabled="true">Войти</a>
+        </form>
+        <form class="d-flex" sec:authorize="isAuthenticated()">
+          <a href="/logout" class="btn btn-primary" role="button" aria-disabled="true">Выйти</a>
+        </form>
+      </div>
+    </div>
+  </nav>
+</div>

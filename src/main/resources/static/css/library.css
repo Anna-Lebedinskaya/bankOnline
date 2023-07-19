@@ -1,0 +1,30 @@
+.closed-bank-account {
+    color: red;
+}
+
+.nav-link {
+    color: whitesmoke !important;
+}
+
+.btn-info  {
+    color: white !important;
+    background-color: #0a4275 !important;
+    border-color: white !important;
+}
+
+.btn-info:hover {
+    background-color: #208fd0 !important;
+    border-color: white !important;
+    color: white !important;
+}
+
+.text-link {
+    text-decoration: none;
+}
+
+.text-link:hover {
+    color: #001445;
+}
+
+
+

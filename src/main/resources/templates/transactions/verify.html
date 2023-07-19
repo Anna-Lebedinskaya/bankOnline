@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Отправить перевод</title>
+    <script th:inline="javascript">
+        let flag = [[${exception}]];//переменная-флаг в thymeleaf
+        window.onload = () => {
+            if (flag) new bootstrap.Modal(document.getElementById('deleteErrorModal'), {keyboard: false}).show()
+        };
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3 class="mt-3 mb-3"
+        th:text="'Перевод со счета ' + ${bankAccountFrom.getAccountNumber()} + ' клиента ' + ${bankAccountFrom.getUserInfo().getLastName()} + ' ' + ${bankAccountFrom.getUserInfo().getFirstName()} + ' ' + ${bankAccountFrom.getUserInfo().getMiddleName()}"></h3>
+    <div class="mt-3 row g-2">
+        <div class="col-md" th:text="'ФИО получателя: ' + ${accountsTo.get(0).getUserInfo().getLastName()} + ' ' + ${accountsTo.get(0).getUserInfo().getFirstName()} + ' ' + ${accountsTo.get(0).getUserInfo().getMiddleName()}">
+        </div>
+    </div>
+    <div class="mt-3 row g-2">
+        <div class="col-md" th:text="'Счет получателя: ' + ${accountsTo.get(0).getAccountNumber()}">
+        </div>
+    </div>
+    <div class="mt-3 row g-2">
+        <div class="col-md" th:text="'Сумма перевода, руб.: ' + ${transfer.getAmount()}">
+        </div>
+    </div>
+    <div class="mt-3 row g-2">
+        <div class="col-md" th:text="'Назначение платежа: ' + ${transfer.getPurpose()}">
+        </div>
+    </div>
+
+
+    <form enctype="multipart/form-data" class="needs-validation" novalidate style="max-width: 50vw" method="POST"
+          th:action="@{/transactions/execute}">
+        <input type="hidden" name="bankAccountFromId"
+               th:value="${bankAccountFrom.getId()}">
+        <input type="hidden" name="bankAccountToId"
+               th:value="${accountsTo.get(0).getId()}">
+        <input type="hidden" name="amount"
+               th:value="${transfer.getAmount()}">
+        <input type="hidden" name="purpose"
+               th:value="${transfer.getPurpose()}">
+        <div class="mt-3 row g-2">
+            <button type="submit" class="btn btn-primary" onclick="validateForm()">Отправить перевод</button>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Назад
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
