@@ -1,0 +1,12 @@
+#docker-compose up
+version: "3.9"
+services:
+  postgres:
+    container_name: localPostgresSQLDBJava16
+    image: postgres
+    environment:
+      POSTGRES_DB: "local_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345"
+    ports:
+      - "5432:5432"
