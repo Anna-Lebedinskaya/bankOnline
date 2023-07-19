@@ -10,6 +10,9 @@ Web-приложение "банк-онлайн".
 - SQL (PostgreSQL);
 - Docker.
 
+Схема БД:
+![bankProject](https://github.com/Anna-Lebedinskaya/bankOnline/assets/112424502/a158dc8a-2017-47cd-bf2c-57998382c489)
+
 Предполагает три роли: админ, менеджер, клиент.
 
 Менеджер может:
