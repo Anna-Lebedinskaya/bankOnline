@@ -40,3 +40,11 @@ Web-приложение "банк-онлайн".
 - изменить пароль в личный кабинет.
 
 Автоматическая отправка отчетов руководителю об открытых счетах и новых клиентов за прошедшую неделю.
+
+![1](https://github.com/Anna-Lebedinskaya/bankOnline/assets/112424502/a4cc63af-3ba7-4aec-b781-a4f1de0a6861)
+
+![2](https://github.com/Anna-Lebedinskaya/bankOnline/assets/112424502/f0e21526-d4df-4c38-b456-73032a32284c)
+
+![3](https://github.com/Anna-Lebedinskaya/bankOnline/assets/112424502/3695288c-ea92-4cef-ac40-f4d248b7e96e)
+
+![4](https://github.com/Anna-Lebedinskaya/bankOnline/assets/112424502/dd1ff2ed-1ecf-40a1-bed6-9a54b45ebacd)
